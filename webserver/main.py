@@ -1,4 +1,4 @@
-from typing import Generator, Union
+from typing import Generator, Union, List
 
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
@@ -23,10 +23,13 @@ def get_db() -> Generator[Session, None, None]:
         db.close()
 
 
-@app.get("/users/")
+@app.get("/users/", response_model=List[models.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    import time
+    start = time.time()
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
+
 
 @app.post("/users/", response_model=models.User)
 def create_user(user: models.UserCreate, db: Session = Depends(get_db)):
@@ -38,4 +41,4 @@ def create_user(user: models.UserCreate, db: Session = Depends(get_db)):
 
 def start():
     "Need for poetry"
-    uvicorn.run("webserver.main:app", host="127.0.0.1", port=6969, reload=True)
+    uvicorn.run("webserver.main:app", host="127.0.0.1", port=1337, reload=True)
