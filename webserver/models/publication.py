@@ -9,7 +9,6 @@ class PublicationCreate(PublicationBase):
     title: str
     description: str
     text: str
-    owner_id: int
 
 class Publication(PublicationBase):
     title: str

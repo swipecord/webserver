@@ -2,16 +2,15 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from .database import Base
+from config import email_length, name_length, password_length, token_length
 
-email_length = 32
-name_length = 16
-password_length = 32
 
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
-    email = Column(String(email_length), unique=True, index=True)
-    name = Column(String(name_length), index=True)
+    id = Column(Integer, primary_key=True)
+    token = Column(String(token_length), unique=True)
+    email = Column(String(email_length), unique=True)
+    name = Column(String(name_length))
     password = Column(String(password_length))
     publications = relationship("Publication", back_populates="owner")
