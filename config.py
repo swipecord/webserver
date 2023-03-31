@@ -1,10 +1,13 @@
-# DATABASE CONFIG
+import os
+
+dbuser = os.environ.get('MYSQL_USER', 'root')
+dbpassword = os.environ.get('MYSQL_PASSWORD', 'bebrasus69')
+dbhost = os.environ.get('MYSQL_HOST', 'localhost')
+dbport = os.environ.get('MYSQL_PORT', '3306')
+dbname = os.environ.get('MYSQL_DATABASE', 'se_backend')
+
 dbtype = "mysql"
 dbdriver = "pymysql"
-dbuser = "root"
-dbpassword = "bebrasus69"
-dbhost = "localhost"
-dbname = "se_backend"
 
 
 # DATABASE USER COLUMNS CONFIG

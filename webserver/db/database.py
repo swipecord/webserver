@@ -9,7 +9,7 @@ from config import \
 )
 
 
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:bebrasus69@localhost/se_backend"
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:bebrasus69@db/se_backend?charset=utf8mb4"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={}

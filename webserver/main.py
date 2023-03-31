@@ -50,8 +50,11 @@ def create_user(user: models.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    return crud.create_user(db, user=user)
-
+    created_user = crud.create_user(db, user=user)
+    user_dict = created_user.__dict__
+    user_dict.pop("_sa_instance_state")  # remove unnecessary attribute
+    return models.UserFullLoginData(**user_dict)
+      
 
 @app.post("/create/publication/", response_model=models.Publication)
 def create_publication(user: models.UserLoginDataUsingToken, 
@@ -71,10 +74,10 @@ def start():
     # This code is literally works 1 out of 2 times, 
     # I think it's better than doing it regularly anyway. 
     # If you have any ideas how this can be improved, please email me.
-    from sys import platform
+    """from sys import platform
     if platform == "linux":
         from os import system
         print("Running: sudo lsof -t -i tcp:8000 | xargs kill -9 (fix [Errno 98] linux issue)")
-        system(b"sudo lsof -t -i tcp:8000 | xargs kill -9")
+        system(b"sudo lsof -t -i tcp:8000 | xargs kill -9")"""
 
-    uvicorn.run("webserver.main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("webserver.main:app", host="0.0.0.0", port=8000, reload=True)

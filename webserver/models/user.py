@@ -24,14 +24,16 @@ class UserLoginDataUsingPassword(UserBase):
 
 
 class UserFullLoginData(UserLoginDataUsingToken, UserLoginDataUsingPassword):
-    pass
+    
+    class Config:
+        orm_mode: True
 
 
 class User(UserBase):
     publications: List[Any] = [] # Publication #TODO:
     name: str
     email: str
-    time_created: date
+
     id: int
 
     class Config:
@@ -49,5 +51,3 @@ class SearchUserByID(SearchUserBase):
 
 class SearchUserByName(SearchUserBase):
     name: str
-
-    

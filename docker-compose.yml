@@ -1,0 +1,26 @@
+version: '3.10'
+
+services:
+  app:
+    build: .
+    command: poetry run start
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  db:
+    hostname: db
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: bebrasus69
+      MYSQL_DATABASE: se_backend
+      LC_ALL: C.UTF-8
+    volumes:
+      - db_data:/var/lib/mysql
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+
+volumes:
+  db_data:
