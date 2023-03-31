@@ -1,4 +1,5 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -13,3 +14,4 @@ class Publication(Base):
     description = Column(String(description_length))
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates="publications")
+    time_created = Column(DateTime(timezone=True), server_default=func.now())

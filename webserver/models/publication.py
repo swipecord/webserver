@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import date
 
 
 class PublicationBase(BaseModel):
@@ -16,6 +17,7 @@ class Publication(PublicationBase):
     text: str
     id: int
     owner_id: int
+    time_created: date
 
     class Config:
         orm_mode = True

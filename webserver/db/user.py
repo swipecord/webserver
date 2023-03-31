@@ -1,4 +1,5 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -14,3 +15,4 @@ class User(Base):
     name = Column(String(name_length))
     password = Column(String(password_length))
     publications = relationship("Publication", back_populates="owner")
+    time_created = Column(DateTime(timezone=True), server_default=func.now())
