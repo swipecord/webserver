@@ -4,16 +4,17 @@ from sqlalchemy.orm import sessionmaker
 
 from config import \
 (
-    dbtype, dbdriver, dbuser, 
-    dbpassword, dbhost, dbname
+    DBTYPE, DBDRIVER, DBUSER, 
+    DBPASSWORD, DBHOST, DBNAME
 )
 
 
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:bebrasus69@db/se_backend?charset=utf8mb4"
+SQLALCHEMY_DATABASE_URL = f"{DBTYPE}+{DBDRIVER}://{DBUSER}:{DBPASSWORD}@{DBHOST}/{DBNAME}?charset=utf8mb4"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={}
 )
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()

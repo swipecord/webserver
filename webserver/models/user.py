@@ -3,7 +3,6 @@ from pydantic import BaseModel
 from datetime import date
 
 
-
 class UserBase(BaseModel):
     pass
 
@@ -12,6 +11,7 @@ class UserCreate(UserBase):
     password: str
     name: str
     email: str
+
 
 class UserLoginDataUsingToken(UserBase):
     id: int
@@ -24,7 +24,6 @@ class UserLoginDataUsingPassword(UserBase):
 
 
 class UserFullLoginData(UserLoginDataUsingToken, UserLoginDataUsingPassword):
-    
     class Config:
         orm_mode: True
 
@@ -33,12 +32,10 @@ class User(UserBase):
     publications: List[Any] = [] # Publication #TODO:
     name: str
     email: str
-
     id: int
 
     class Config:
         orm_mode = True
-
 
 
 class SearchUserBase(BaseModel):

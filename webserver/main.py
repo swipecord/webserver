@@ -2,15 +2,13 @@ from typing import Generator, Union, List
 
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-
 import uvicorn
 
 from . import db, crud, models
-
 from .db.database import Base, engine, SessionLocal
+
+
 Base.metadata.create_all(bind=engine)
-
-
 app = FastAPI()
 
 
@@ -74,10 +72,12 @@ def start():
     # This code is literally works 1 out of 2 times, 
     # I think it's better than doing it regularly anyway. 
     # If you have any ideas how this can be improved, please email me.
-    """from sys import platform
-    if platform == "linux":
+    from sys import platform
+    from config import ISDOCKER
+
+    if not ISDOCKER and platform == "linux":
         from os import system
         print("Running: sudo lsof -t -i tcp:8000 | xargs kill -9 (fix [Errno 98] linux issue)")
-        system(b"sudo lsof -t -i tcp:8000 | xargs kill -9")"""
+        system(b"sudo lsof -t -i tcp:8000 | xargs kill -9")
 
     uvicorn.run("webserver.main:app", host="0.0.0.0", port=8000, reload=True)

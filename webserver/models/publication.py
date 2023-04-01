@@ -11,6 +11,7 @@ class PublicationCreate(PublicationBase):
     description: str
     text: str
 
+
 class Publication(PublicationBase):
     title: str
     description: str

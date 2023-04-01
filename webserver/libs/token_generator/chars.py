@@ -1,5 +1,5 @@
-literals = "qwertyuiopasdfghjklzxcvbnm"
-literals_upper = literals.upper()
-numbers = "0123456789"
+LITERALS = "qwertyuiopasdfghjklzxcvbnm"
+LITERALS_UPPER = LITERALS.upper()
+NUMBERS = "0123456789"
 
-symbols = literals + literals_upper + numbers
+SYMBOLS = LITERALS + LITERALS_UPPER + NUMBERS

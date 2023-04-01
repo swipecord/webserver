@@ -5,6 +5,7 @@ from webserver import models, db
 from config import token_length
 from webserver.libs.token_generator import generate_token
 
+
 def get_user_by_id(session: Session, user_id: int) -> Union[db.User, None]:
     return session.query(db.User).filter(db.User.id == user_id).first()
 
@@ -29,24 +30,9 @@ def create_user(session: Session, user: models.UserCreate) -> db.User:
     session.refresh(db_user)
     return db_user
 
+
 def check_user_token(session: Session, user_id: int, user_token: str) -> Union[bool, None]:
     db_user = session.query(db.User).filter(db.User.id == user_id).first()
     if db_user is None:
         return None
     return db_user.token == user_token
-
-
-def get_publication_by_id(session: Session, publication_id: int):
-    return session.query(db.Publication).filter(db.Publication.id == publication_id).first()
-
-
-def get_publications(session: Session, skip: int = 0, limit: int = 100) -> List[db.Publication]:
-    return session.query(db.Publication).offset(skip).limit(limit).all()
-
-
-def create_user_publication(session: Session, publication: models.PublicationCreate, user_id: int) -> db.Publication:
-    db_item = db.Publication(**publication.dict(), owner_id=user_id)
-    session.add(db_item)
-    session.commit()
-    session.refresh(db_item)
-    return db_item

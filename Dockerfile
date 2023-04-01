@@ -15,7 +15,8 @@ ENV MYSQL_DATABASE=se_backend \
     MYSQL_USER=root \
     MYSQL_PASSWORD=bebrasus69 \
     MYSQL_HOST=db \
-    MYSQL_PORT=3306
+    MYSQL_PORT=3306 \
+    ISDOCKER=1
 
 # Запустите сервер FastAPI
 CMD ["poetry", "run", "start"]

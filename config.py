@@ -1,23 +1,27 @@
 import os
 
-dbuser = os.environ.get('MYSQL_USER', 'root')
-dbpassword = os.environ.get('MYSQL_PASSWORD', 'bebrasus69')
-dbhost = os.environ.get('MYSQL_HOST', 'localhost')
-dbport = os.environ.get('MYSQL_PORT', '3306')
-dbname = os.environ.get('MYSQL_DATABASE', 'se_backend')
+# DATABASE DATA
+DBUSER = os.environ.get('MYSQL_USER', 'root')
+DBPASSWORD = os.environ.get('MYSQL_PASSWORD', 'bebrasus69')
+DBHOST = os.environ.get('MYSQL_HOST', 'localhost')
+DBPORT = os.environ.get('MYSQL_PORT', '3306')
+DBNAME = os.environ.get('MYSQL_DATABASE', 'se_backend')
 
-dbtype = "mysql"
-dbdriver = "pymysql"
+DBTYPE = "mysql"
+DBDRIVER = "pymysql"
 
 
 # DATABASE USER COLUMNS CONFIG
-email_length = 32
-name_length = 16
-password_length = 32
-token_length = 32
+EMAIL_LENGTH = 32
+NAME_LENGTH = 16
+PASSWORD_LENGTH = 32
+TOKEN_LENGTH = 32
 
 
 # DATABASE PUBLICATION COLUMNS CONFIG
-text_length = 3000
-title_length = 100
-description_length = 250
+TEXT_LENGTH = 3000
+TITLE_LENGTH = 100
+DESCRIPTION_LENGTH = 250
+
+
+ISDOCKER = os.environ.get("ISDOCKER", 0)
