@@ -32,6 +32,7 @@ class User(UserBase):
     publications: List[Any] = [] # Publication #TODO:
     name: str
     email: str
+    time_created: date
     id: int
 
     class Config:
