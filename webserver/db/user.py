@@ -16,3 +16,13 @@ class User(Base):
     password = Column(String(PASSWORD_LENGTH))
     publications = relationship("Publication", back_populates="owner")
     time_created = Column(DateTime(timezone=True), server_default=func.now())
+    blacklisted_users = relationship("UserBlacklist", backref="user")
+
+
+
+class UserBlacklist(Base):
+    __tablename__ = "user_blacklist"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    blacklisted_user_id = Column(Integer, nullable=False)

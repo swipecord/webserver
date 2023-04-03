@@ -30,6 +30,7 @@ class UserFullLoginData(UserLoginDataUsingToken, UserLoginDataUsingPassword):
 
 class User(UserBase):
     publications: List[Any] = [] # Publication #TODO:
+    blacklisted_users: List[Any] = []
     name: str
     email: str
     time_created: date
@@ -49,3 +50,19 @@ class SearchUserByID(SearchUserBase):
 
 class SearchUserByName(SearchUserBase):
     name: str
+
+
+class UserBlacklistBase(BaseModel):
+    user_id: int
+    blacklisted_user_id: int
+
+
+class CreateUserBlacklist(UserBlacklistBase):
+    pass
+
+
+class UserBlacklist(UserBlacklistBase):
+    id: int
+
+    class Config:
+        orm_mode=True
