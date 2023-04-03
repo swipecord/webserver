@@ -2,7 +2,7 @@ from typing import List, Union
 from sqlalchemy.orm import Session
 
 from webserver import models, db
-from config import token_length
+from config import TOKEN_LENGTH
 from webserver.libs.token_generator import generate_token
 
 
@@ -20,9 +20,9 @@ def get_users(session: Session, skip: int = 0, limit: int = 100) -> List[db.User
 
 def create_user(session: Session, user: models.UserCreate) -> db.User:
     hashed_password = user.password  # TODO: hash function
-    token = generate_token(token_length)
+    token = generate_token(TOKEN_LENGTH)
     while session.query(db.User).filter(db.User.token == token).first():
-        token = generate_token(token_length)
+        token = generate_token(TOKEN_LENGTH)
 
     db_user = db.User(email=user.email, name=user.name, password=hashed_password, token=token)
     session.add(db_user)
