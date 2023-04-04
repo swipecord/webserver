@@ -66,3 +66,5 @@ class UserBlacklist(UserBlacklistBase):
 
     class Config:
         orm_mode=True
+
+# TODO: remove unused models

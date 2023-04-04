@@ -1,6 +1,9 @@
-from typing import Generator, Union, List
+from typing import (Annotated, Generator,
+                    Union, List)
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import (FastAPI, HTTPException, 
+                     Depends,  Header)
+
 from sqlalchemy.orm import Session
 import uvicorn
 
@@ -66,10 +69,12 @@ def get_publication_author(publication_id: int, db: Session = Depends(get_db)) -
 
 
 @app.patch("/me/blacklist")
-def get_user_blacklist(user: UserLoginDataUsingToken, db: Session = Depends(get_db)):
-    if not crud.check_user_token(db, user.id, user.token):
+def get_user_blacklist(user_id: Annotated[int, Header()],
+                       user_token: Annotated[str, Header()],
+                       db: Session = Depends(get_db)) -> dict[str, List[int]]:
+    if not crud.check_user_token(db, user_id, user_token):
         raise HTTPException(status_code=403)
-    return {"blacklist": list(crud.get_user_blacklist(db, user.id))} # cast tuple to list
+    return {"blacklist": list(crud.get_user_blacklist(db, user_id))} # cast tuple to list
 
 
 @app.post("/create/user/", response_model=models.UserFullLoginData)
@@ -84,24 +89,26 @@ def create_user(user: models.UserCreate, db: Session = Depends(get_db)) -> model
       
 
 @app.post("/create/publication/", response_model=models.Publication)
-def create_publication(user: models.UserLoginDataUsingToken, 
+def create_publication(user_id: Annotated[int, Header()],
+                       user_token: Annotated[str, Header()],
                        publication: models.PublicationCreate, 
                        db: Session = Depends(get_db)) -> db.Publication:
-    if not crud.check_user_token(db, user.id, user.token):
+    if not crud.check_user_token(db, user_id, user_token):
         raise HTTPException(status_code=403)
-    return crud.create_user_publication(db, publication, user.id)
+    return crud.create_user_publication(db, publication, user_id)
 
     
 @app.post("/me/blacklist/add/{blacklisted_user_id}", response_model=models.UserBlacklist)
-def add_user_to_blacklist(user: models.UserLoginDataUsingToken,
+def add_user_to_blacklist(user_id: Annotated[int, Header()],
+                          user_token: Annotated[str, Header()],
                           blacklisted_user_id: int,
                           db: Session = Depends(get_db)) -> db.UserBlacklist:
-    if not crud.check_user_token(db, user.id, user.token):
+    if not crud.check_user_token(db, user_id, user_token):
         raise HTTPException(status_code=403)
 
     
     blacklist = crud.add_user_to_blacklist(db, models.CreateUserBlacklist(
-        user_id=user.id, 
+        user_id=user_id, 
         blacklisted_user_id=blacklisted_user_id)
     )
     if blacklist is None:
@@ -122,7 +129,7 @@ def start():
     if not ISDOCKER and platform == "linux":
         from os import system
         print("Running: sudo lsof -t -i tcp:8000 | xargs kill -9 (fix [Errno 98] linux issue)")
-        system(b"sudo lsof -t -i tcp:8000 | xargs kill -9")
+        system("sudo lsof -t -i tcp:8000 | xargs kill -9")
 
     uvicorn.run("webserver.main:app", host="0.0.0.0", port=8000, reload=True)
 
