@@ -1,8 +1,10 @@
 from typing import List, Union
+from datetime import datetime, timedelta
+
 from sqlalchemy.orm import Session
 
 from webserver import models, db
-from config import TOKEN_LENGTH
+from config import TOKEN_LENGTH, PUBL_TIME_SHOWS
 from webserver.libs.token_generator import generate_token
 
 
@@ -61,6 +63,20 @@ def get_user_blacklist(session: Session, user_id: int):
     return session.query(db.UserBlacklist.blacklisted_user_id).filter(db.UserBlacklist.user_id == user_id).first()
 
 
-def get_user_view(session: Session, user_id: int):
-    db_view = session.query(db.Publication).all()
-    return db_view
+def get_user_view(session: Session, user_id: int) -> List[db.Publication]:
+    "Return user publication view"
+
+
+    def get_recent_publications(session: Session) -> List[db.Publication]:
+        # Calculate the date from which to filter publications
+        days_ago = datetime.now() - timedelta(days=PUBL_TIME_SHOWS)
+
+        # Request to get a list of publications created no later than {config.PUBL_TIME_SHOWS} days ago
+        publications = session.query(db.Publication).\
+            filter(db.Publication.time_created >= days_ago).\
+            all()
+
+        return publications
+
+
+    return get_recent_publications(session)
