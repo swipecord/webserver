@@ -35,7 +35,7 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return users
 
 
-@app.get("/publication/{publ_id}", response_model=models.Publication)
+@app.get("/publication/{publ_id}/", response_model=models.Publication)
 def get_publication_by_id(publ_id: int, db: Session = Depends(get_db)) -> db.Publication:
     publ = crud.get_publication_by_id(db, publ_id)
     if publ is None:
@@ -43,7 +43,7 @@ def get_publication_by_id(publ_id: int, db: Session = Depends(get_db)) -> db.Pub
     return publ
 
 
-@app.get("/user/{user_id}", response_model=models.Publication)
+@app.get("/user/{user_id}/", response_model=models.Publication)
 def get_user_by_id(user_id: int, db: Session = Depends(get_db)) -> db.User:
     user = crud.get_user_by_id(db, user_id)
     if user is None:
@@ -51,7 +51,7 @@ def get_user_by_id(user_id: int, db: Session = Depends(get_db)) -> db.User:
     return user
 
 
-@app.get("/user/{user_id}/publications", response_model=List[models.Publication])
+@app.get("/user/{user_id}/publications/", response_model=List[models.Publication])
 def get_user_publications(user_id: int, db: Session = Depends(get_db)) -> List[db.Publication]:
     user = crud.get_user_by_id(db, user_id)
     if user is None:
@@ -59,7 +59,7 @@ def get_user_publications(user_id: int, db: Session = Depends(get_db)) -> List[d
     return user.publications
 
 
-@app.get("/publication/{publication_id}/author", response_model=models.User)
+@app.get("/publication/{publication_id}/author/", response_model=models.User)
 def get_publication_author(publication_id: int, db: Session = Depends(get_db)) -> db.User:
     publ = crud.get_publication_by_id(db, publication_id)
     if publ is None:
@@ -67,7 +67,16 @@ def get_publication_author(publication_id: int, db: Session = Depends(get_db)) -
     return publ.owner
 
 
-@app.get("/me/blacklist")
+@app.get("/me/view/", response_model=dict[str, List[models.Publication]])
+def get_publication_view(user_id: Annotated[int, Header()],
+                         user_token: Annotated[str, Header()],
+                         db: Session = Depends(get_db)) -> dict[str, List[int]]:
+    if not crud.check_user_token(db, user_id, user_token):
+        raise HTTPException(status_code=403)
+    return {"view": list(crud.get_user_view(db, user_id))}
+
+
+@app.get("/me/blacklist/")
 def get_user_blacklist(user_id: Annotated[int, Header()],
                        user_token: Annotated[str, Header()],
                        db: Session = Depends(get_db)) -> dict[str, List[int]]:
@@ -97,12 +106,12 @@ def create_publication(user_id: Annotated[int, Header()],
     return crud.create_user_publication(db, publication, user_id)
 
     
-@app.post("/me/blacklist/add/{blacklisted_user_id}", response_model=models.UserBlacklist)
+@app.post("/me/blacklist/add/{blacklisted_user_id}/", response_model=models.UserBlacklist)
 def add_user_to_blacklist(user_id: Annotated[int, Header()],
                           user_token: Annotated[str, Header()],
                           blacklisted_user_id: int,
                           db: Session = Depends(get_db)) -> db.UserBlacklist:
-    if not crud.check_user_token(db, user_id, user_token):
+    if not crud.check_user_token(db, user_id, user_token) or user_id==blacklisted_user_id:
         raise HTTPException(status_code=403)
 
     blacklist = crud.add_user_to_blacklist(db, models.CreateUserBlacklist(
@@ -130,4 +139,4 @@ def start():
         print("Running: sudo lsof -t -i tcp:8000 | xargs kill -9 (fix [Errno 98] linux issue)")
         system("sudo lsof -t -i tcp:8000 | xargs kill -9")
 
-    uvicorn.run("webserver.main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("webserver.main:app", host="127.0.0.1", port=8000, reload=True)

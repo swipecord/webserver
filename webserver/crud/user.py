@@ -59,3 +59,8 @@ def get_user_blacklist(session: Session, user_id: int):
         return None
     
     return session.query(db.UserBlacklist.blacklisted_user_id).filter(db.UserBlacklist.user_id == user_id).first()
+
+
+def get_user_view(session: Session, user_id: int):
+    db_view = session.query(db.Publication).all()
+    return db_view
