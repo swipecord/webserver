@@ -7,9 +7,8 @@ from fastapi import (FastAPI, HTTPException,
 from sqlalchemy.orm import Session
 import uvicorn
 
-from webserver.models.user import UserFullLoginData, UserLoginDataUsingToken
 
-
+# TODO: refactoring .models.user module
 from . import db, crud, models
 from .db.database import Base, engine, SessionLocal
 from config import (NAME_LENGTH, TEXT_LENGTH,
@@ -68,7 +67,7 @@ def get_publication_author(publication_id: int, db: Session = Depends(get_db)) -
     return publ.owner
 
 
-@app.patch("/me/blacklist")
+@app.get("/me/blacklist")
 def get_user_blacklist(user_id: Annotated[int, Header()],
                        user_token: Annotated[str, Header()],
                        db: Session = Depends(get_db)) -> dict[str, List[int]]:
@@ -106,10 +105,10 @@ def add_user_to_blacklist(user_id: Annotated[int, Header()],
     if not crud.check_user_token(db, user_id, user_token):
         raise HTTPException(status_code=403)
 
-    
     blacklist = crud.add_user_to_blacklist(db, models.CreateUserBlacklist(
         user_id=user_id, 
-        blacklisted_user_id=blacklisted_user_id)
+        blacklisted_user_id=blacklisted_user_id
+        )
     )
     if blacklist is None:
         raise HTTPException(status_code=404)
@@ -132,5 +131,3 @@ def start():
         system("sudo lsof -t -i tcp:8000 | xargs kill -9")
 
     uvicorn.run("webserver.main:app", host="0.0.0.0", port=8000, reload=True)
-
-# TODO TOKEN IN HEADER TODO
