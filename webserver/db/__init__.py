@@ -1,2 +1,2 @@
-from .user import User, UserBlacklist
+from .user import User, UserBlacklist, UserView
 from .publication import Publication

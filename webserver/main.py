@@ -15,7 +15,6 @@ from config import (NAME_LENGTH, TEXT_LENGTH,
                     TITLE_LENGTH, DESCRIPTION_LENGTH,
                     EMAIL_LENGTH, PASSWORD_LENGTH)
 
-
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
 

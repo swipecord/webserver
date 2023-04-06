@@ -17,6 +17,16 @@ class User(Base):
     publications = relationship("Publication", back_populates="owner")
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     blacklisted_users = relationship("UserBlacklist", backref="user")
+    views = relationship("UserView", backref="user")
+
+
+class UserView(Base):
+    __tablename__ = "user_view"
+    
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    view_time = Column(DateTime(timezone=True), server_default=func.now())
+    publication_id = Column(Integer, ForeignKey('publications.id'), nullable=False)
 
 
 
