@@ -19,6 +19,8 @@ class Publication(PublicationBase):
     id: int
     owner_id: int
     time_created: date
+    views_counter: int
+
 
     class Config:
         orm_mode = True

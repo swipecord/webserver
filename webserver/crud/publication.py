@@ -12,6 +12,15 @@ def get_publications(session: Session, skip: int = 0, limit: int = 100) -> List[
     return session.query(db.Publication).offset(skip).limit(limit).all()
 
 
+def increment_publication_vcounter(session: Session, publication_id: int):
+    publ = get_publication_by_id(session, publication_id)
+    if publ is None:
+        return None
+    
+    publ.views_counter += 1
+    session.commit()
+    return publ
+
 def create_user_publication(session: Session, publication: models.PublicationCreate, user_id: int) -> db.Publication:
     db_item = db.Publication(**publication.dict(), owner_id=user_id)
     session.add(db_item)

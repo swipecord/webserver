@@ -39,6 +39,7 @@ def get_publication_by_id(publ_id: int, db: Session = Depends(get_db)) -> db.Pub
     publ = crud.get_publication_by_id(db, publ_id)
     if publ is None:
         raise HTTPException(status_code=404)
+    crud.increment_publication_vcounter(db, publ.id)
     return publ
 
 

@@ -111,6 +111,7 @@ def get_user_view(session: Session, user_id: int) -> List[db.Publication]:
     def set_publications_view(user_id: int, publications: List[db.Publication]): #todo optimizatio
         for publication in publications:
             create_view(session, user_id, publication.id)
+            publication.views_counter += 1
 
     publications = get_publications()
     set_publications_view(user_id, publications)
